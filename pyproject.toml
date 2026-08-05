@@ -1,0 +1,33 @@
+[project]
+name = "bt1234-sectiona-2026-calculator-amgoit"
+version = "0.1.0"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Puts the REPOSITORY ROOT on sys.path, which is the only reason
+# `from src.<module> import ...` resolves. pytest inserts the test file's own
+# directory (tests/) and nothing else, so without this every starter died at
+# COLLECTION with "No module named 'src'" — exit 2, zero tests run, and the
+# smoke test that exists to make a first push green never even executed.
+# Stage 04 reads that as failing tests, so a brand-new repository scored zero.
+#
+# The pipeline invokes `python -m pytest`, which puts the working directory on
+# sys.path and would cover this on its own. This line is what makes a bare
+# `pytest` in the student's own terminal give the same answer CI gives them —
+# a local run that disagrees with the pipeline is worse than no local run.
+pythonpath = ["."]
+# --cov-report=xml writes coverage.xml, the Cobertura file the pipeline
+# normalises. Without it the coverage gate sees no report and scores zero.
+addopts = "--cov=src --cov-report=xml --cov-report=term"
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+# A beginner-appropriate set: real errors and unused imports, not the full
+# opinionated ruleset that would bury a first-year in style warnings.
+select = ["E", "F", "I"]
+
+[tool.coverage.run]
+source = ["src"]
